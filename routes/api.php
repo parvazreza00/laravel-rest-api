@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserApiController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,4 +41,9 @@ Route::post('/register-api-using-passport', [UserApiController::class, 'register
 Route::post('/login-api-using-passport', [UserApiController::class, 'loginUserUsingPassport']);
 
 
-
+//routing for userController 
+Route::post('/register',[UserController::class, 'register']);
+Route::post('/login',[UserController::class, 'login']);
+Route::middleware('auth:api')->group(function () {
+         Route::get('/user',[UserController::class, 'userDetails']);
+    });
