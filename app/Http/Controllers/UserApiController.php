@@ -75,4 +75,27 @@ class UserApiController extends Controller
         User::findOrFail($id)->delete();
         return response("User data deleted successfully");
     }//end method
+
+    //delete multiple users
+    public function MultipleUsersDelete($ids){
+        $ids = explode(',',$ids);
+        User::whereIn('id',$ids)->delete();        
+        return response("Multi User data deleted successfully");
+    }//end method
+
+    //dlete multiple users with json format
+    public function MultipleUsersDeleteJson(Request $request){
+            $header = $request->header('Authorization');  
+            if($header==''){
+                return response("Authorization is required");
+            }else{
+                if($header=="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IndlYiBqb3VybmV5IiwiaWF0IjoxNTE2MjM5MDIyfQ.NFYDeJzZHUap1hiZPVKqlnWinXmTumJ-tTiuk_Pzttc"){
+                    $dataid = $request->all();
+                    User::whereIn('id',$dataid['ids'])->delete();  
+                    return response('User data is deleted successfully');  
+                }else{
+                    return response("Authorization token is missmatched");
+                }
+            }                     
+    }
 }

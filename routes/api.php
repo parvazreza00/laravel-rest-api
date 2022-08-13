@@ -29,5 +29,10 @@ Route::post('/add-multi-users', [UserApiController::class, 'addMultiUsers']);
 Route::put('/update-users/{id}', [UserApiController::class, 'updateUsers']);
 //patch api for update users table single field data
 Route::patch('/update-users-data/{id}', [UserApiController::class, 'updateUsersData']);
-//delete api for deleting data
+//delete api for deleting single data
 Route::delete('/users-delete/{id}', [UserApiController::class, 'UsersDelete']);
+//delete api for deleting multiple data
+Route::delete('/multiple-users-delete/{id}', [UserApiController::class, 'MultipleUsersDelete']);
+//delete api for deleting multiple data with json
+Route::delete('/multiple-users-delete-json', [UserApiController::class, 'MultipleUsersDeleteJson']);
+
