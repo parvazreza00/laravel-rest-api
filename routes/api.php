@@ -35,4 +35,9 @@ Route::delete('/users-delete/{id}', [UserApiController::class, 'UsersDelete']);
 Route::delete('/multiple-users-delete/{id}', [UserApiController::class, 'MultipleUsersDelete']);
 //delete api for deleting multiple data with json
 Route::delete('/multiple-users-delete-json', [UserApiController::class, 'MultipleUsersDeleteJson']);
+//laravel passport api auth
+Route::post('/register-api-using-passport', [UserApiController::class, 'registerUserUsingPassport']);
+Route::post('/login-api-using-passport', [UserApiController::class, 'loginUserUsingPassport']);
+
+
 

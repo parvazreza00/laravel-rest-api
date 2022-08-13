@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Auth;
 
 class UserApiController extends Controller
 {
@@ -97,5 +98,49 @@ class UserApiController extends Controller
                     return response("Authorization token is missmatched");
                 }
             }                     
+    }//end method
+
+    //register api using passport
+    public function registerUserUsingPassport(Request $request){
+        $data = $request->all();
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|unique:users|max:50|min:5',
+            'password' => 'required|unique:users',
+        ]);
+        User::insert([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+        if(Auth::attempt(['email' => $data['email'], 'password' => $data['password']])){
+            $user = User::where('email',$data['email'])->first();
+            $access_token = $user->createToken($data['email'])->accessToken;
+            User::where('email',$data['email'])->update(['access_token' => $access_token]);
+
+            return response()->json(['message'=>"User Successfully Registered", 'access_token'=>$access_token]);
+        }else{
+            return response("OPPS! Something went wrong man!");
+        }
+        
+    }
+
+    //login api using passport
+    public function loginUserUsingPassport(Request $request){
+        $data = $request->all();
+        $request->validate([            
+            'email' => 'required|exists:users',
+            'password' => 'required',
+        ]);
+        
+        if(Auth::attempt(['email' => $data['email'], 'password' => $data['password']])){
+            $user = User::where('email',$data['email'])->first();
+            $access_token = $user->createToken($data['email'])->accessToken;
+            User::where('email',$data['email'])->update(['access_token' => $access_token]);
+            return response()->json(['message'=>"User Successfully Login", 'access_token'=>$access_token]);
+        }else{
+            return response("Invalid email or password");
+        }
+        
     }
 }
