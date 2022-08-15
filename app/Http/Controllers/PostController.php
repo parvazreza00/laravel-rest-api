@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Post;
+use Auth;
 
 class PostController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +27,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -34,7 +38,30 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $authuser = Auth::user();
+        if($authuser){
+            $validator = Validator::make($request->all(), [
+                'title' => 'required',
+                'description' => 'required',
+                
+            ]);
+            if($validator->fails()){
+                return response()->json(['status' => 'Fails', 'validation_errors' => $validator->errors()]);
+            }
+
+            $data = $request->all();
+            $data['user_id'] = auth()->id();
+
+            $post = Post::create($data);
+            if($post){
+                return response()->json(['status' => 'success', 'message' => 'Post created successfully', 'post' =>$post]);
+            }else{
+                return response()->json(['status' => 'Fails', 'message' => 'Post created Fails']);
+            }
+        }else{
+            return response()->json(['status' => 'Fails' , 'UnAuthorized' => '403']);
+    }
+        
     }
 
     /**

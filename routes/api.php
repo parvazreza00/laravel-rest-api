@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserApiController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,4 +47,7 @@ Route::post('/register',[UserController::class, 'register']);
 Route::post('/login',[UserController::class, 'login']);
 Route::middleware('auth:api')->group(function () {
          Route::get('/user',[UserController::class, 'userDetails']);
+
+         //post data save
+         Route::post('/post-save', [PostController::class, 'store']);
     });
